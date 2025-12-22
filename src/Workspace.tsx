@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// Dodano ikonę Save do importów
-import { ChevronLeft, Send, Loader2, Image as ImageIcon, FormInput, LayoutGrid, Type, Box, Gamepad2, Globe, Lock, Save } from 'lucide-react';
+// Dodano ikonę Share2 do importów
+import { ChevronLeft, Send, Loader2, Image as ImageIcon, FormInput, LayoutGrid, Type, Box, Gamepad2, Globe, Lock, Save, Share2 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { generateUI } from './aiService';
 // Importujemy funkcję pobierania
@@ -198,7 +198,7 @@ export default function Workspace() {
     return (
         <div className="h-screen w-screen bg-teo-void flex flex-col overflow-hidden text-white relative font-sans">
 
-            {/* HEADER - ZAKTUALIZOWANY O PRZYCISK ZAPISU */}
+            {/* HEADER - ZAKTUALIZOWANY O PRZYCISK ZAPISU I SHARE */}
             <header className="h-16 border-b border-white/10 bg-black/40 backdrop-blur-md flex items-center justify-between px-6 z-20 shrink-0">
                 <div className="flex items-center gap-4">
                     <button onClick={() => navigate('/')} className="p-2 hover:bg-white/10 rounded-full text-gray-400 hover:text-white">
@@ -225,8 +225,19 @@ export default function Workspace() {
                     </div>
                 </div>
 
-                {/* SEKCJA Z PRZYCISKIEM EKSPORTU I STATUSU */}
-                <div className="flex items-center gap-4">
+                {/* SEKCJA Z PRZYCISKIEM SHARE, EKSPORTU I STATUSU */}
+                <div className="flex items-center gap-3">
+
+                    {/* NOWY PRZYCISK SHARE */}
+                    <button
+                        onClick={() => alert("Moduł wysyłania do TeOnauts Apps w budowie! (Dane zapisane w lokalnym hubie)")}
+                        className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg transition-all flex items-center gap-2"
+                        title="Udostępnij w TeOnauts Apps"
+                    >
+                        <Share2 className="w-5 h-5" />
+                        <span className="text-xs font-mono hidden md:inline">SHARE</span>
+                    </button>
+
                     {/* Przycisk pobierania */}
                     <button
                         onClick={() => downloadCode(projectName, uiState)}

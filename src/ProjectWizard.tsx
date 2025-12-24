@@ -94,17 +94,25 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
                                 />
                             </div>
 
-                            {/* Wybór Rdzenia */}
+                            {/* Wybierz Rdzeń AI - ZAKTUALIZOWANY */}
                             <div className="space-y-3">
                                 <label className="text-xs text-gray-400 font-mono uppercase tracking-widest">Wybierz Rdzeń AI (Theme)</label>
-                                <div className="grid grid-cols-5 gap-3">
-                                    {['default', 'grvim', 'game', 'eco', 'custom'].map(m => (
+                                <div className="grid grid-cols-3 gap-3">
+                                    {['default', 'grvim', 'game', 'eco', 'business', 'custom'].map(m => (
                                         <button
                                             key={m}
                                             onClick={() => setProjectData(p => ({ ...p, mode: m }))}
-                                            className={`p-2 rounded-lg text-xs font-bold uppercase transition-all border ${projectData.mode === m ? 'bg-teo-primary text-white border-teo-primary' : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/30'}`}
+                                            className={`p-3 rounded-xl text-xs font-bold uppercase transition-all border flex flex-col items-center gap-2 ${projectData.mode === m ? 'bg-white/10 text-white border-white/50 shadow-lg' : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/30'}`}
                                         >
-                                            {m}
+                                            {/* Ikonki dla trybów */}
+                                            {m === 'business' && <Coffee className="w-5 h-5 text-amber-400" />}
+                                            {m === 'game' && <Zap className="w-5 h-5 text-yellow-400" />}
+                                            {m === 'eco' && <Users className="w-5 h-5 text-cyan-400" />}
+                                            {m === 'grvim' && <Bot className="w-5 h-5 text-purple-400" />}
+                                            {m === 'default' && <Box className="w-5 h-5 text-gray-400" />}
+                                            {m === 'custom' && <Edit3 className="w-5 h-5 text-white" />}
+
+                                            <span>{m === 'business' ? 'BIZ / CAFE' : m}</span>
                                         </button>
                                     ))}
                                 </div>

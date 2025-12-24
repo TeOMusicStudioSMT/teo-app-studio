@@ -14,6 +14,8 @@ const THEMES: any = {
     game: { color: 'text-green-400', border: 'border-green-400', bg: 'bg-green-400', glow: 'shadow-green-500/50' },
     eco: { color: 'text-cyan-400', border: 'border-cyan-400', bg: 'bg-cyan-400', glow: 'shadow-cyan-500/50' },
     custom: { color: 'text-yellow-400', border: 'border-yellow-400', bg: 'bg-yellow-400', glow: 'shadow-yellow-500/50' },
+    // NOWY STYL KAWIARNIANY
+    business: { color: 'text-amber-200', border: 'border-amber-500', bg: 'bg-amber-600', glow: 'shadow-amber-500/50' },
 };
 
 // --- ELEMENTY UI ---

@@ -6,36 +6,39 @@ const PERSONAS: Record<string, string> = {
   grvim: `Jesteś MISTRZEM KUŹNI (GRVim Forge). Twórz pojedyncze, uniwersalne moduły (klocki). Styl: Techniczny, industrialny.`,
   game: `Jesteś GAME WEAVER. Styl: Retro, Pixel-art, Cyberpunk, Arcade, Neon Green. Interfejsy gier.`,
   eco: `Jesteś ECOSYSTEM ARCHITECT. Styl: Data-driven, Clean, Futuristic Blue/Cyan. Dashboardy i dane.`,
-  // NOWOŚĆ: MODUŁ BIZNESOWY DLA SIOSTRY
   business: `
     Jesteś WEB ARCHITECT dla Sieci GraviTON.
     Tworzysz profesjonalne strony wizytówkowe dla fizycznych biznesów (Kawiarnie, Salony, Sklepy).
     STYL: Elegancki, ciepły, 'Coffee & Gold', czytelny, zachęcający.
     
-    KLUCZOWE ELEMENTY DO UŻYWANIA:
-    - Sekcje Hero z dużym napisem zapraszającym.
-    - Karty Menu (Nazwa dania + Cena).
-    - Moduł "Wymiana Energii" (Przycisk Płatności/Rezerwacji).
-    - Sekcja "O Nas" z opisem klimatu.
-    
-    Pamiętaj: To ma wyglądać jak gotowa, piękna strona mobilna kawiarni.
+    JEŚLI DOSTANIESZ ZDJĘCIE:
+    1. Przeanalizuj kolory na zdjęciu i użyj ich w "screenColor" oraz kolorach przycisków.
+    2. Jeśli na zdjęciu jest MENU (tekst), przepisz pozycje do kart (Card).
+    3. Jeśli na zdjęciu jest PRODUKT (np. ciasto), stwórz sekcję promującą ten produkt.
   `
 };
 
-// PRZYWRÓCONA FUNKCJA GENERUJĄCA
-export const generateUI = async (apiKey: string, userPrompt: string, mode: string = 'default', customInstruction: string = '') => {
+// Funkcja pomocnicza do konwersji Base64 na format Gemini
+function fileToGenerativePart(path: string, mimeType: string) {
+  return {
+    inlineData: {
+      data: path.split(',')[1], // Usuwamy nagłówek 'data:image/jpeg;base64,'
+      mimeType
+    },
+  };
+}
+
+export const generateUI = async (apiKey: string, userPrompt: string, mode: string = 'default', customInstruction: string = '', imageBase64: string | null = null) => {
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // LOGIKA WYBORU OSOBOWOŚCI:
     let personaInstruction = PERSONAS[mode] || PERSONAS['default'];
-
     if (mode === 'custom' && customInstruction) {
       personaInstruction = `TRYB NIESTANDARDOWY (CUSTOM CORE). Twoja rola: ${customInstruction}`;
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp",
+      model: "gemini-2.0-flash-exp", // Flash jest świetny do Vision!
       systemInstruction: `
           ${personaInstruction}
           
@@ -50,15 +53,22 @@ export const generateUI = async (apiKey: string, userPrompt: string, mode: strin
                { "type": "input", "placeholder": "..." },
                { "type": "card", "title": "...", "subtitle": "..." }
             ],
-            "message": "Krótki komentarz"
+            "message": "Krótki komentarz co zanalizowano"
           }
-          Nie używaj Markdown (bloków kodu). Zwróć surowy JSON.
+          Nie używaj Markdown.
         `
     });
 
-    const result = await model.generateContent(userPrompt);
+    // Budowanie zapytania (Tekst + Opcjonalny Obraz)
+    const promptParts: any[] = [userPrompt];
+
+    if (imageBase64) {
+      // Zakładamy, że to JPEG lub PNG. Gemini Flash radzi sobie z tym.
+      promptParts.push(fileToGenerativePart(imageBase64, "image/jpeg"));
+    }
+
+    const result = await model.generateContent(promptParts);
     const response = result.response;
-    // Czyszczenie ewentualnych znaczników markdown
     const cleanJson = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
 
     return JSON.parse(cleanJson);
@@ -68,7 +78,7 @@ export const generateUI = async (apiKey: string, userPrompt: string, mode: strin
     return {
       screenColor: "#1a0000",
       elements: [],
-      message: "Błąd połączenia z Węzłem Kreatywnym. Sprawdź klucz API."
+      message: "Błąd analizy danych lub obrazu. Sprawdź klucz API."
     };
   }
 };

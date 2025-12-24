@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// DODANO BRAKUJĄCE IKONY: Coffee, Zap, Users, Bot
 import { X, Rocket, Lock, Globe, Edit3, Box, Coffee, Zap, Users, Bot } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface ProjectWizardProps {
     isOpen: boolean;
@@ -12,6 +11,7 @@ interface ProjectWizardProps {
 
 export default function ProjectWizard({ isOpen, onClose, preselectedMode }: ProjectWizardProps) {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams(); // <- ODBIERAMY KLUCZ Z URL
 
     const [projectData, setProjectData] = useState({
         name: '',
@@ -21,11 +21,14 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
         isPublic: false
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (preselectedMode) setProjectData(p => ({ ...p, mode: preselectedMode }));
     }, [preselectedMode]);
 
     const handleLaunch = () => {
+        // Pobieramy klucz z obecnego adresu (jeśli jest)
+        const currentKey = searchParams.get('key');
+
         const params = new URLSearchParams({
             mode: projectData.mode,
             name: projectData.name || 'Untitled Project',
@@ -33,6 +36,12 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
             public: projectData.isPublic.toString(),
             custom: projectData.customDefinition
         });
+
+        // JEŚLI MAMY KLUCZ, DOKLEJAMY GO DO NOWEGO ADRESU!
+        if (currentKey) {
+            params.append('key', currentKey);
+        }
+
         navigate(`/create?${params.toString()}`);
     };
 
@@ -45,11 +54,11 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
                 >
                     <motion.div
                         initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-                        className="bg-[#0a0a0a] border border-white/10 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+                        className="bg-[#0a0a0a] border border-white/10 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
                     >
                         {/* Header */}
-                        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-purple-900/20 to-blue-900/20">
-                            <h2 className="text-2xl font-bold text-white font-mono flex items-center gap-3">
+                        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-purple-900/20 to-blue-900/20 shrink-0">
+                            <h2 className="text-xl md:text-2xl font-bold text-white font-mono flex items-center gap-3">
                                 <Rocket className="text-teo-primary" /> INICJALIZACJA PROJEKTU
                             </h2>
                             <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full text-gray-400 hover:text-white transition-colors">
@@ -57,8 +66,8 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
                             </button>
                         </div>
 
-                        {/* Formularz */}
-                        <div className="p-8 space-y-6">
+                        {/* Formularz - Scrollowalny */}
+                        <div className="p-6 md:p-8 space-y-6 overflow-y-auto custom-scrollbar">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-xs text-gray-400 font-mono uppercase tracking-widest">Nazwa Projektu</label>
@@ -97,14 +106,13 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
                             {/* Wybierz Rdzeń AI */}
                             <div className="space-y-3">
                                 <label className="text-xs text-gray-400 font-mono uppercase tracking-widest">Wybierz Rdzeń AI (Theme)</label>
-                                <div className="grid grid-cols-3 gap-3">
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                     {['default', 'grvim', 'game', 'eco', 'business', 'custom'].map(m => (
                                         <button
                                             key={m}
                                             onClick={() => setProjectData(p => ({ ...p, mode: m }))}
                                             className={`p-3 rounded-xl text-xs font-bold uppercase transition-all border flex flex-col items-center gap-2 ${projectData.mode === m ? 'bg-white/10 text-white border-white/50 shadow-lg' : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/30'}`}
                                         >
-                                            {/* Ikonki dla trybów */}
                                             {m === 'business' && <Coffee className="w-5 h-5 text-amber-400" />}
                                             {m === 'game' && <Zap className="w-5 h-5 text-yellow-400" />}
                                             {m === 'eco' && <Users className="w-5 h-5 text-cyan-400" />}
@@ -140,14 +148,14 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
                         </div>
 
                         {/* Footer */}
-                        <div className="p-6 border-t border-white/10 bg-black/40 flex justify-end gap-4">
+                        <div className="p-6 border-t border-white/10 bg-black/40 flex justify-end gap-4 shrink-0">
                             <button onClick={onClose} className="px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-colors">Anuluj</button>
                             <button
                                 onClick={handleLaunch}
                                 disabled={!projectData.name}
                                 className="px-8 py-3 rounded-xl bg-gradient-to-r from-teo-primary to-blue-600 text-white font-bold shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                             >
-                                <Rocket className="w-5 h-5" /> ROZPOCZNIJ SYNTEZĘ
+                                <Rocket className="w-5 h-5" /> START
                             </button>
                         </div>
                     </motion.div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Rocket, Lock, Globe, Edit3, Box } from 'lucide-react';
+// DODANO BRAKUJĄCE IKONY: Coffee, Zap, Users, Bot
+import { X, Rocket, Lock, Globe, Edit3, Box, Coffee, Zap, Users, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface ProjectWizardProps {
@@ -20,7 +21,6 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
         isPublic: false
     });
 
-    // Aktualizuj tryb jeśli zmieni się props (opcjonalne, dla pewności)
     React.useEffect(() => {
         if (preselectedMode) setProjectData(p => ({ ...p, mode: preselectedMode }));
     }, [preselectedMode]);
@@ -94,7 +94,7 @@ export default function ProjectWizard({ isOpen, onClose, preselectedMode }: Proj
                                 />
                             </div>
 
-                            {/* Wybierz Rdzeń AI - ZAKTUALIZOWANY */}
+                            {/* Wybierz Rdzeń AI */}
                             <div className="space-y-3">
                                 <label className="text-xs text-gray-400 font-mono uppercase tracking-widest">Wybierz Rdzeń AI (Theme)</label>
                                 <div className="grid grid-cols-3 gap-3">

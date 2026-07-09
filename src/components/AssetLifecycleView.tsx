@@ -140,7 +140,10 @@ export const AssetLifecycleView: React.FC<Props> = ({ node, onClose }) => {
                                     </div>
                                     <div className="bg-black/30 p-4 rounded-xl border border-white/5">
                                         <div className="flex items-center gap-2 text-slate-400 text-xs mb-1 font-bold tracking-wider"><FiDollarSign /> EST. VALUE</div>
-                                        <div className="text-2xl font-mono text-emerald-400">{(Math.random() * 100).toFixed(2)} GRV</div>
+                                        {/* Wartość deterministyczna z tożsamości węzła: stabilność podnosi, entropia zżera */}
+                                        <div className="text-2xl font-mono text-emerald-400">
+                                            {(([...node.id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 10000, 7) / 100) * (1 - node.entropy / 200)).toFixed(2)} GRV
+                                        </div>
                                     </div>
                                 </div>
 

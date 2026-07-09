@@ -83,7 +83,9 @@ export const AppStudioView: React.FC<{ onClose: () => void }> = ({ onClose }) =>
 
             setMessages(prev => [...prev, { role: 'ai', content: "Construction complete. ready for Tokenization." }]);
         } catch (error) {
-            setMessages(prev => [...prev, { role: 'ai', content: "Synthesis Error. Connection disrupted." }]);
+            console.error('[AppStudio] ❌ Synteza padła:', error);
+            const detail = error instanceof Error ? ` (${error.message})` : '';
+            setMessages(prev => [...prev, { role: 'ai', content: `Synthesis Error. Connection disrupted.${detail}` }]);
         } finally {
             setIsGenerating(false);
         }
@@ -169,7 +171,7 @@ export const AppStudioView: React.FC<{ onClose: () => void }> = ({ onClose }) =>
                     <div className="p-4 bg-slate-950 border-t border-white/5 flex gap-2">
                         <input
                             type="text" value={input} onChange={(e) => setInput(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                             placeholder="Define node function..."
                             className="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                         />

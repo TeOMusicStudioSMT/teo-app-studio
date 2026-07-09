@@ -4,6 +4,7 @@ import { FiHexagon, FiTrash2, FiCode, FiX, FiCpu, FiClock, FiVideo, FiImage, FiM
 import { getGravitonNodes, deleteGravitonNode, type GravitonNode, type NodeType } from '../services/appNodeService';
 import toast from 'react-hot-toast';
 import { AssetLifecycleView } from './AssetLifecycleView';
+import { GravitonConstellation } from './GravitonConstellation';
 
 const getNodeIcon = (type: NodeType) => {
     if (!type) return <FiHexagon />;
@@ -103,6 +104,9 @@ export const GravitonGalleryView: React.FC<{ onClose: () => void }> = ({ onClose
                         <p className="text-sm text-slate-600 mt-2 max-w-md">Twoja cyfrowa przestrzeń jest czysta. Użyj App Studio lub Quantum Forge, aby zmaterializować pierwsze obiekty.</p>
                     </div>
                 ) : (
+                    <>
+                    {/* 🌌 Żywa mapa sieci — węzły połączone rezonansem (typ/autor) */}
+                    <GravitonConstellation nodes={nodes} onSelect={setSelectedNode} />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
                         <AnimatePresence>
                             {nodes.map((n, index) => (
@@ -115,6 +119,7 @@ export const GravitonGalleryView: React.FC<{ onClose: () => void }> = ({ onClose
                             ))}
                         </AnimatePresence>
                     </div>
+                    </>
                 )}
             </div>
 

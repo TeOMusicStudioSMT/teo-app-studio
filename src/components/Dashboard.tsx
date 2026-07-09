@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, LayoutGrid, Settings, UploadCloud, Music } from 'lucide-react'; // <--- DODANO IKONĘ MUSIC
+import { Cpu, LayoutGrid, Settings, UploadCloud, Music, Smartphone, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // Importy modułów
@@ -116,6 +116,25 @@ export default function Dashboard() {
                     color="from-slate-500 to-slate-700"
                     delay={0.3}
                     onClick={() => setIsSettingsOpen(true)}
+                />
+
+                {/* Trasy istniały, ale nie miały żadnego wejścia z Dashboardu */}
+                <Card
+                    title="Workspace"
+                    subtitle="Visual App Builder."
+                    icon={Smartphone}
+                    color="from-emerald-500 to-teal-600"
+                    delay={0.35}
+                    onClick={() => navigate('/create')}
+                />
+
+                <Card
+                    title="TeOnauts"
+                    subtitle="Community Apps."
+                    icon={Users}
+                    color="from-amber-500 to-orange-600"
+                    delay={0.4}
+                    onClick={() => navigate('/community')}
                 />
             </div>
 

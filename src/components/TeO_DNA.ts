@@ -27,9 +27,19 @@ Zwracaj TYLKO obiekt JSON w takim formacie:
 // MODUŁ SŁÓW (Zaklęcia Użytkownika)
 // To tutaj będziemy dodawać nowe definicje "cało-promptowe"
 export const WORD_LIBRARY: Record<string, string> = {
-    "START": "Stwórz ekran powitalny z dużym logo, przyciskiem 'Wejdź' i tłem kosmosu.",
-    "LOGIN": "Stwórz formularz logowania z polem email, hasło i przyciskiem 'Zaloguj'.",
-    "DASHBOARD": "Stwórz siatkę kafelków z ikonami, statystykami i wykresem.",
-    "GRVIM": "Dodaj element interaktywny, który pulsuje i reaguje na dotyk (reprezentacja energii).",
-    // Tutaj system będzie się uczył nowych słów...
+  "START": "Stwórz ekran powitalny z dużym logo, przyciskiem 'Wejdź' i tłem kosmosu.",
+  "LOGIN": "Stwórz formularz logowania z polem email, hasło i przyciskiem 'Zaloguj'.",
+  "DASHBOARD": "Stwórz siatkę kafelków z ikonami, statystykami i wykresem.",
+  "GRVIM": "Dodaj element interaktywny, który pulsuje i reaguje na dotyk (reprezentacja energii).",
+  // Tutaj system będzie się uczył nowych słów...
 };
+
+export const getIdentity = () => {
+  // Próbujemy odczytać Usera z localStorage (zostawionego przez Teleport)
+  const storedUser = localStorage.getItem('teo_user_identity');
+  if (storedUser) {
+    return JSON.parse(storedUser); // np. { name: 'Jan Kowalski', domain: 'jan.teo' }
+  }
+  return { name: 'TeO Prime', domain: 'master.node' }; // Fallback
+};
+

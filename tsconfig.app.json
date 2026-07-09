@@ -24,7 +24,6 @@
     "jsx": "react-jsx",
     /* Linting */
     "strict": true,
-    "noUnusedLocals": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true

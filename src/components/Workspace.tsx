@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Send, Loader2, Image as ImageIcon, FormInput, LayoutGrid, Type, Box, Gamepad2, Globe, Lock, Save, Share2, Camera, Paperclip, X } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { generateUI } from './aiService';
-import { downloadCode } from './exportService';
+import { generateUI } from '../services/aiService';
+import { downloadCode } from '../services/exportService';
 
 // Style
 const THEMES: any = {

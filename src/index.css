@@ -1,19 +1,47 @@
+/* src/index.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  background-color: #030014;
+/* EFEKT GŁĘBOKIEGO KOSMOSU (Bez instalowania bibliotek) */
+body {
+  background-color: #000000;
+  background-image:
+    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
   color: white;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* Subtelna siatka w tle - efekt blueprintu */
-body {
-  background-size: 40px 40px;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+/* Animowana Mgławica (opcjonalnie) */
+@keyframes drift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.teo-bg-animated {
+  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
+  background-size: 400% 400%;
+  animation: drift 15s ease infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+  /* Ważne: tło musi być pod spodem */
 }
 
 /* Ukrywanie paska przewijania dla czystego wyglądu */

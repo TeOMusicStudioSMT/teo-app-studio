@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import Workspace from './Workspace';
-import TeOnautsApps from './TeOnautsApps'; // <--- Import
+import Dashboard from './components/Dashboard';
+import Workspace from './components/Workspace';
+import TeOnautsApps from './components/TeOnautsApps'; // <--- Import
 
 function App() {
   return (

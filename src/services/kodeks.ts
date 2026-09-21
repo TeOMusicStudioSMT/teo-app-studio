@@ -20,6 +20,9 @@ async function api<T>(sciezka: string, init?: RequestInit): Promise<T> {
     return d as T;
 }
 
+export interface Silnik { id: string; model: string; etykieta: string; domyslny: boolean; dostepny: boolean; uwaga: string; }
+/** Silniki Kodeksa: lokalne zawsze pierwsze i domyślne; chmura (Claude/Gemini) tylko z kluczem w Kiblu. */
+export const silniki = () => api<{ silniki: Silnik[] }>('/api/appstudio/silniki').then((d) => d.silniki);
 export const projekty = () => api<{ projekty: ProjektLista[] }>('/api/appstudio/projekty').then((d) => d.projekty);
 export const projekt = (id: string) => api<{ projekt: Projekt }>(`/api/appstudio/projekty/${encodeURIComponent(id)}`).then((d) => d.projekt);
 export const nowyProjekt = (nazwa: string, opis: string) => api<{ projekt: Projekt }>('/api/appstudio/projekty', { method: 'POST', body: JSON.stringify({ nazwa, opis }) }).then((d) => d.projekt);

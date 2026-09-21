@@ -11,7 +11,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Bot, Hammer, Loader2, Plus, RotateCcw, Trash2, ExternalLink, RefreshCw, Camera } from 'lucide-react';
-import { adresPodgladu, adresZrzutu, buduj, cofnij, nowyProjekt, projekt as pobierzProjekt, projekty as pobierzProjekty, usunProjekt, type Krok, type Projekt, type ProjektLista } from '../services/kodeks';
+import { adresPodgladu, adresZrzutu, buduj, cofnij, nowyProjekt, projekt as pobierzProjekt, projekty as pobierzProjekty, silniki as pobierzSilniki, usunProjekt, type Krok, type Projekt, type ProjektLista, type Silnik } from '../services/kodeks';
 
 const KOLOR: Record<string, string> = { model: 'text-cyan-300', postep: 'text-slate-500', pliki: 'text-emerald-300', build: 'text-emerald-300', test: 'text-emerald-300', blad: 'text-rose-300', koniec: 'text-amber-300', start: 'text-slate-400', stan: 'text-slate-400' };
 
@@ -33,6 +33,9 @@ const KodeksView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const [zrzutT, setZrzutT] = useState(Date.now());
     const [podgladT, setPodgladT] = useState(Date.now());
     const [blad, setBlad] = useState<string | null>(null);
+    // Silnik Kodeksa: lokalny domyślnie; chmura to świadomy wybór (kod wychodzi z Katedry).
+    const [silniki, setSilniki] = useState<Silnik[]>([]);
+    const [silnik, setSilnik] = useState<string>('');
     const dziennikRef = useRef<HTMLDivElement>(null);
 
     const odswiezListe = useCallback(async () => {
@@ -45,6 +48,7 @@ const KodeksView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }, []);
 
     useEffect(() => { void odswiezListe(); }, [odswiezListe]);
+    useEffect(() => { pobierzSilniki().then((s) => { setSilniki(s); setSilnik((s.find((x) => x.domyslny) ?? s[0])?.model ?? ''); }).catch(() => setSilniki([])); }, []);
     useEffect(() => { dziennikRef.current?.scrollTo({ top: dziennikRef.current.scrollHeight }); }, [kroki]);
 
     const utworz = async () => {
@@ -66,7 +70,7 @@ const KodeksView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             await buduj(wybrany.id, zadanie.trim(), (k) => {
                 setKroki((prev) => k.typ === 'postep' && prev.at(-1)?.typ === 'postep' ? [...prev.slice(0, -1), k] : [...prev, k]);
                 if (k.typ === 'test' || k.typ === 'koniec') { setZrzutT(Date.now()); setPodgladT(Date.now()); }
-            });
+            }, silnik || undefined);
         } catch (e) { setBlad((e as Error).message); }
         finally { setPracuje(false); await odswiezProjekt(wybrany.id); await odswiezListe(); }
     };
@@ -135,6 +139,15 @@ const KodeksView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                                 <div className="flex flex-wrap gap-1.5">
                                     {PRZYKLADY.map((p) => <button key={p} onClick={() => setZadanie(p)} disabled={pracuje} className="text-[10px] px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-40">{p.slice(0, 48)}…</button>)}
                                 </div>
+                                {silniki.length > 0 && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 shrink-0">Silnik</span>
+                                        <select value={silnik} onChange={(e) => setSilnik(e.target.value)} disabled={pracuje} className="flex-1 bg-black/60 border border-white/10 rounded-lg px-2 py-1.5 text-xs outline-none focus:border-emerald-500/60 disabled:opacity-60">
+                                            {silniki.map((s) => <option key={s.id} value={s.model} disabled={!s.dostepny}>{s.etykieta}{s.dostepny ? '' : ' — brak klucza'}</option>)}
+                                        </select>
+                                    </div>
+                                )}
+                                {silniki.find((s) => s.model === silnik)?.uwaga && <p className="text-[10px] text-slate-500">{silniki.find((s) => s.model === silnik)?.uwaga}</p>}
                                 <button onClick={zlec} disabled={pracuje || !zadanie.trim()} className="w-full py-2.5 rounded-lg text-sm font-semibold bg-cyan-600/80 hover:bg-cyan-600 disabled:opacity-40 flex items-center justify-center gap-2">
                                     {pracuje ? <><Loader2 className="w-4 h-4 animate-spin" /> Kodeks pracuje…</> : <><Hammer className="w-4 h-4" /> Zleć Kodeksowi</>}
                                 </button>

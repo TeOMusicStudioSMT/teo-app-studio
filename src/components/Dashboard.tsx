@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, LayoutGrid, Settings, UploadCloud, Music, Smartphone, Users } from 'lucide-react';
+import { Cpu, LayoutGrid, Settings, UploadCloud, Music, Smartphone, Users, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // Importy modułów
@@ -71,6 +71,18 @@ export default function Dashboard() {
             {/* Grid Kart */}
             {/* Zmieniono grid na 5 kolumn dla dużych ekranów, żeby pomieścić nową kartę */}
             <div className="max-w-7xl mx-auto px-4 pb-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 relative z-10">
+
+                {/* 🛠️ App Studio 2.0 — Kodeks (TeOgochi od kodu) buduje apki na moście,
+                    z piaskownicą, buildem i testem w przeglądarce. Stare „App Studio" (Gemini
+                    w przeglądarce) zostaje obok, dopóki Suweren nie zdecyduje o jego losie. */}
+                <Card
+                    title="Kodeks buduje"
+                    subtitle="TeOgochi pisze, testuje, poprawia."
+                    icon={Bot}
+                    color="from-emerald-400 to-cyan-600"
+                    delay={0.05}
+                    onClick={() => navigate('/kodeks')}
+                />
 
                 <Card
                     title="App Studio"
